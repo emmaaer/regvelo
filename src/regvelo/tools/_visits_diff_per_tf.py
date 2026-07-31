@@ -4,12 +4,12 @@ import pandas as pd
 from typing import Sequence
 from anndata import AnnData
 from ..metrics._utils import get_significance
+from ..plotting._utils import SIGNIFICANCE_PALETTE
 
 def visits_diff_per_tf(
     adata: AnnData,
     terminal_states: Sequence[str],
     dd_sig: np.ndarray,
-    sig_palette: dict,
 ) -> tuple[pd.DataFrame, list[str]]:
     """Collect per-terminal-state visit difference values and significance colours.
 
@@ -21,8 +21,6 @@ def visits_diff_per_tf(
         Terminal state labels to iterate over.
     dd_sig : np.ndarray
         Array of p-values, one per terminal state, from rgv.tl.simulated_visit_diff.
-    sig_palette : dict
-        Mapping from significance label ('n.s.', '*', '**', '***') to hex colour.
 
     Returns
     -------
@@ -45,6 +43,6 @@ def visits_diff_per_tf(
             data.append({"Value": val, "Group": subgrp})
 
         significance = get_significance(p_value)
-        palette_rel.append(sig_palette[significance])
+        palette_rel.append(SIGNIFICANCE_PALETTE[significance])
 
     return pd.DataFrame(data), palette_rel
