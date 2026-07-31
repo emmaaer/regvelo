@@ -34,7 +34,8 @@ def commitment_score(
         raise KeyError(f"Key '{lineage_key}' not found in `adata.obsm`.")
 
     p = pd.DataFrame(adata.obsm[lineage_key], columns=adata.obsm[lineage_key].names.tolist())
-    score = calculate_entropy(p)
+    entropy, max_entropy = calculate_entropy(p)
+    score = 1 - entropy / max_entropy
     adata.obs["commitment_score"] = np.array(score)
 
     sc.pl.umap(
