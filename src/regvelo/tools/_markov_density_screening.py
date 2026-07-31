@@ -12,7 +12,7 @@ from tqdm.auto import tqdm
 import cellrank as cr
 import regvelo as rgv
 
-from ..plotting._utils import SIGNIFICANCE_PALETTE, delta_to_probability, smooth_score
+from ..plotting._utils import delta_to_probability, smooth_score
 from ..tools._visits_diff_per_tf import _visits_diff_per_tf
 
 
@@ -246,7 +246,7 @@ def markov_density_screening(
             res_table.loc[TF, f"dd_sig_{state}"] for state in TERMINAL_STATES
         ])
 
-        df, _ = visits_diff_per_tf(adata, TERMINAL_STATES, dd_sig_tf, SIGNIFICANCE_PALETTE)
+        df, _ = visits_diff_per_tf(adata, TERMINAL_STATES, dd_sig_tf)
         df["Factor"] = TF
 
         for state in TERMINAL_STATES:
