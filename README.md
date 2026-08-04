@@ -38,6 +38,10 @@ There are several options to intall regvelo:
   pip install git+https://github.com/theislab/regvelo.git@main
 ```
 
+## RegVelo agentic workflow via Biomni lab 
+
+RegVelo pipeline can be run using an agentic workflow via [Biomni lab](https://biomni.phylo.bio/), which allows user to upload custom datasets and run full analysis using a chat-based approach. 
+
 ## Citation
 
 If you find RegVelo useful for your research, please consider citing our work as:
