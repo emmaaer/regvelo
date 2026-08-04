@@ -35,9 +35,9 @@ def calculate_entropy(prob_matrix : np.ndarray) -> np.ndarray:
     log_probs = np.zeros_like(prob_matrix)
     mask = prob_matrix != 0
     np.log2(prob_matrix, where=mask, out=log_probs)
-
     entropy = -np.sum(prob_matrix * log_probs, axis=1)
-    return entropy
+    max_entropy = np.log2(prob_matrix.shape[1])
+    return entropy, max_entropy
 
 def get_significance(pvalue: float) -> str:
     """Return significance annotation for a p-value.

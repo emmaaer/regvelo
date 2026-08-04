@@ -9,6 +9,7 @@ def preprocess_data(
     adata: AnnData,
     spliced_layer: str = "Ms",
     unspliced_layer: str = "Mu",
+    return_velo_genes = False, 
     min_max_scale: bool = True,
     filter_on_r2: bool = True,
 ) -> AnnData:
@@ -25,6 +26,8 @@ def preprocess_data(
         Name of the spliced layer.
     unspliced_layer
         Name of the unspliced layer.
+    return_velo_genes
+        Return velocity-informative genes (default=False).
     min_max_scale
         Whether to apply min-max scaling to the spliced and unspliced layers.
     filter_on_r2
@@ -34,6 +37,7 @@ def preprocess_data(
     -------
     Preprocessed annotated data object.
     """
+        
     if min_max_scale:
         scaler = MinMaxScaler()
         adata.layers[spliced_layer] = scaler.fit_transform(adata.layers[spliced_layer])
@@ -50,5 +54,10 @@ def preprocess_data(
             :, np.logical_and(adata.var.velocity_r2 > 0, adata.var.velocity_gamma > 0)
         ].copy()
         adata = adata[:, adata.var.velocity_genes].copy()
+
+    if return_velo_genes:
+        if not filter_on_r2:
+            raise ValueError("return_velo_genes=True requires filter_on_r2=True")
+        return adata.var_names.tolist()
 
     return adata
