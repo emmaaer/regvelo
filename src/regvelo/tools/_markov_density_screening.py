@@ -13,7 +13,7 @@ import cellrank as cr
 import regvelo as rgv
 
 from ..plotting._utils import delta_to_probability, smooth_score
-from ..tools._visits_diff_per_tf import _visits_diff_per_tf
+from ..tools._visits_diff_per_tf import visits_diff_per_tf
 
 
 @contextmanager
