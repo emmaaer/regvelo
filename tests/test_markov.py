@@ -8,24 +8,17 @@ from scvi.data import synthetic_iid
 import regvelo as rgv
 from regvelo import REGVELOVI
 
-from .src.tools._TFscreening import TFscreening
-from .src.plotting._markov_screen import (
-    _visits_diff_per_tf,
-    _plot_visits_dist,
-    _plot_visits_dist_combined,
-)
-from .src.plotting._driver_TF_ranking import (
-    plot_top_TF,
-    compute_TF_regulon,
-    plot_grn_weight,
-    plot_GRN_per_TF,
-)
+from .src.tools._markov_density_screening import markov_density_screening
+from .src.tools._compute_TF_regulon import compute_TF_regulon
+
+from .src.plotting._plot_TF_regulon import plot_TF_regulon
+from .src.plotting._plot_TF_success_rate import plot_TF_success_rate
+from .src.plotting._plot_visits_dist_screen import plot_visits_dist_screen
 
 # Common variables used in the test
 cluster_key = "cell_type"
 TERMINAL_STATES = ["mNC_head_mesenchymal"]
 STARTING_POINTS = ["start"]
-
 
 def test_markov():
     # create a small synthetic dataset
@@ -97,32 +90,22 @@ def test_markov():
         adata_perturb_dict[TF] = adata_target_perturb
 
     # run TF screening
-    res_df = TFscreening(
-        adata,
-        adata_perturb_dict,
-        TERMINAL_STATES,
-        STARTING_POINTS,
-        tf_ko_list=TF_candidate,
-        cluster_key=cluster_key,
-        method="stepwise",
-        n_step_to_use=500,
-    )
+    markov_density_screening(adata, adata_perturb_dict, TERMINAL_STATES=TERMINAL_STATES,  
+                                    STARTING_POINTS=STARTING_POINTS, 
+                                    tf_ko_list=TF_candidate,
+                                    cluster_key=cluster_key, method="stepwise", n_step_to_use=500)
 
+    plot_visits_dist_screen(adata, terminal_states=TERMINAL_STATES,
+                               candidate_list=TF_candidate, tick_range=0.5)
+    
     # plotting utilities (smoke checks)
-    plot_top_TF(res_df, adata, cluster_key=[cluster_key], threshold=0.1)
+    plot_TF_success_rate(adata, threshold=0.1)
 
-    coef_targets, coef_regulators = compute_TF_regulon(
-        adata, MODEL, cluster_key=cluster_key, TF=[TF_candidate[0]], TERMINAL_STATES=TERMINAL_STATES
-    )
-
-    plot_GRN_per_TF(
-        adata,
-        MODEL,
-        cluster_key=[cluster_key],
-        TF=[TF_candidate[0]],
-        TERMINAL_STATES=TERMINAL_STATES,
-        terminal_state_to_plot=TERMINAL_STATES[0],
-        coef_targets=coef_targets,
-        coef_regulators=coef_regulators,
-        n_hits=10,
-    )
+    coef_targets, coef_regulators = compute_TF_regulon(adata, rgv_model = MODEL, cluster_key=cluster_key, 
+                                                       TERMINAL_STATES=TERMINAL_STATES, TF=TF_candidate[0], 
+                                                        threshold=0.9, n_states=10)
+    plot_TF_regulon(adata, rgv_model=MODEL, cluster_key=cluster_key,
+                TF=TF_candidate[0], 
+                terminal_state_to_plot=TERMINAL_STATES[0],
+                coef_targets=coef_targets, coef_regulators=coef_regulators,
+                n_hits=10)
