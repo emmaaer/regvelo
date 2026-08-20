@@ -110,6 +110,25 @@ REGVELOVI.setup_anndata(adata, spliced_layer="Ms", unspliced_layer="Mu")
 vae = REGVELOVI(adata, W=W, regulators=TF)
 ```
 
+```{note}
+`REGVELOVI` supports three training strategies that trade off how strictly the model follows the prior
+GRN, controlled via the `soft_constraint` and `lam2` arguments:
+
+- **hard** (`soft_constraint=False`): the GRN structure is fixed by the prior; no new TF-target edges are
+  learned.
+- **soft** (`soft_constraint=True`, `lam2=0` — the default used above): the model may learn new gene-TF
+  interactions from the data.
+- **soft_regularized** (`soft_constraint=True`, `lam2` in `(0, 1]`): like `soft`, but an additional penalty
+  on large entries of the regulatory ODE's Jacobian (weighted by `lam2`) encourages a sparser GRN.
+
+The best strategy (and `lam2` value, if applicable) depends on the dataset. To systematically compare all
+three on your own data using biologically meaningful metrics (pseudotime/stemness correlation, terminal
+state identification, cross-boundary correctness), use {class}`~regvelo.ModelComparison` — see the
+[API reference](api/model) and the
+[model comparison tutorial](tutorials/modelcomparison/ModelComp.ipynb) for details on selecting the proper
+model for a new dataset.
+```
+
 ### Training
 
 Train the RegVelo model {cite:p}`wang2026regvelo`, save it, and write the model outputs back to `adata`:
