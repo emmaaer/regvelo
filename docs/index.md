@@ -14,6 +14,12 @@
 
         Learn more about :mod:`regvelo`.
 
+    .. grid-item-card:: Getting started
+        :link: getting_started
+        :link-type: doc
+
+        Run the RegVelo pipeline end to end in a few minimal steps.
+
     .. grid-item-card:: API
         :link: api/index
         :link-type: doc
@@ -35,6 +41,7 @@
 :titlesonly: true
 
 about/index
+getting_started
 model/index
 api/index
 tutorials/index
