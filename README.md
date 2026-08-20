@@ -17,7 +17,7 @@ RegVelo's key applications
 
 ## Getting started
 
-We have [tutorials](https://regvelo.readthedocs.io/en/latest/tutorials/index.html) to help you get started.
+We have [tutorials](https://regvelo.readthedocs.io/en/latest/getting_started.html) to help you get started.
 
 
 ## Installation
