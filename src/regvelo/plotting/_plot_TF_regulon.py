@@ -83,6 +83,9 @@ def plot_TF_regulon(
             Transcription factor whose regulon is plotted.
         terminal_state_to_plot : str
             Terminal-state column to rank edges by (descending score).
+        GRN_to_use : str
+            GRN connection to use in the visualization. Accepted options are 
+            ``prior``, ``inferred``, ``both``.
         GRN : pandas.DataFrame
             Gene-by-gene GRN (prior, inferred, or mixed) used to sign the edges in
             the network diagram.
